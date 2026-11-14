@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pizzeria Nonna – nga brumi te pica</title>
+
+<!-- Favicon / ikona e faqes -->
+<link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+<link rel="icon" type="image/png" sizes="192x192" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+
+<!-- Meta për ndarje në rrjetet sociale (opsionale, por e rekomanduar) -->
+<meta property="og:title" content="Pizzeria Nonna – nga brumi te pica">
+<meta property="og:description" content="Brumë i fermentuar natyrshëm, furrë me dru, Tiranë.">
+<meta property="og:image" content="logo.png">
+<style>
+/* ════════════════════════════════════════════════════
+   TEMA E ZEZË (DARK) & GLASSMORPHISM
+   ════════════════════════════════════════════════════ */
+:root{
+  --bg: #09090b; /* Sfondi kryesor pothuajse i zi */
+  --paper: rgba(255, 255, 255, 0.05); /* Baza e xhamit (glass) */
+  --ink: #f4f4f5;
+  --muted: #a1a1aa;
+  --accent: #ee5a40;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-soft: rgba(255, 255, 255, 0.05);
+  --badge-new: #2e7d32;
+  --badge-pop: #d97706;
+  --badge-spec: #7c3aed;
+  --invalid: #e74c3c;
+  color-scheme: dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--ink);line-height:1.45;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:0;
+}
+body::before{
+  content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);
+  background:#000;z-index:10;
+}
+h1,h2,h3,h4,.sans{font-family:"Trebuchet MS",system-ui,-apple-system,"Segoe UI",sans-serif}
+
+/* ════════════════════════════════════════════════════
+   ANIMACIONI SCROLLUES
+   ════════════════════════════════════════════════════ */
+#track{height:520vh;position:relative;background:#1b1410}
+#stage{
+  position:sticky;top:env(safe-area-inset-top,0px);
+  height:calc(100vh - env(safe-area-inset-top,0px));
+  height:calc(100svh - env(safe-area-inset-top,0px));
+  overflow:hidden;background:#1b1410;color:#f6ebdc;
+}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block;will-change:contents}
+.shade{
+  position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(20,12,8,.55),transparent 22%,transparent 55%,rgba(20,12,8,.88));
+}
+.brand{
+  position:absolute;top:16px;left:0;right:0;text-align:center;
+  font:700 14px/1 "Trebuchet MS",system-ui,sans-serif;
+  letter-spacing:.3em;text-transform:uppercase;color:#f6c48c;
+}
+.cap{
+  position:absolute;left:0;right:0;bottom:0;
+  padding:0 22px 34px;text-align:center;max-width:34rem;margin:0 auto;
+}
+.cap small{font:700 12px "Trebuchet MS",system-ui,sans-serif;letter-spacing:.22em;color:#f6c48c}
+.cap h1{font-size:clamp(2rem,9vw,3.2rem);margin:.15rem 0 .3rem;line-height:1.05;text-shadow:0 2px 14px rgba(0,0,0,.6)}
+.cap p{
+  margin:0;color:#ecdcc8;font-size:1.02rem;
+  font-family:Georgia,"Times New Roman",serif;
+  text-shadow:0 1px 8px rgba(0,0,0,.6);
+}
+.cap .go{
+  display:none;margin-top:14px;background:#ee5a40;color:#fff;
+  text-decoration:none;font:700 1rem "Trebuchet MS",system-ui,sans-serif;
+  padding:13px 26px;border-radius:999px;
+}
+#hint{
+  position:absolute;top:50px;left:0;right:0;text-align:center;
+  font:13px "Trebuchet MS",system-ui,sans-serif;color:#f6c48c;
+  transition:opacity .3s;animation:bob 1.6s ease-in-out infinite;
+}
+@keyframes bob{50%{transform:translateY(5px)}}
+#bar{position:absolute;left:0;bottom:0;height:4px;width:0;background:#ee5a40}
+#load{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:#1b1410;font:600 15px "Trebuchet MS",system-ui,sans-serif;
+  letter-spacing:.14em;color:#f6c48c;transition:opacity .4s;
+}
+
+/* ════════════════════════════════════════════════════
+   DESKTOP HERO BANNER
+   ════════════════════════════════════════════════════ */
+
+/* Default: fshihet në mobile */
+#hero-desktop { display: none; }
+
+@media (min-width: 900px) {
+
+  /* Fshih animacionin frame-by-frame në desktop */
+  #track { display: none; }
+
+  /* Shfaq bannerin hero në desktop */
+  #hero-desktop {
+    display: flex;
+    position: relative;
+    height: 88vh;
+    min-height: 600px;
+    max-height: 920px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    background:
+      url('images.jpg')
+      center center / cover no-repeat;
+  }
+
+  /* Overlay gradient për lexueshmëri + atmosferë dark */
+  #hero-desktop::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at center, rgba(10, 5, 3, 0.841) 0%, rgba(10, 5, 3, 0.644) 100%),
+      linear-gradient(to bottom, rgba(10, 5, 3, 0.188), rgba(10, 5, 3, 0));
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Vija e sipërme me ngjyrën e brendit */
+  #hero-desktop::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 1px;
+    background: var(--line);
+    z-index: 2;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 780px;
+    padding: 0 24px;
+    color: #f6ebdc;
+    animation: heroFadeUp .9s cubic-bezier(.2,.7,.2,1) both;
+  }
+
+  @keyframes heroFadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-brand {
+    font: 700 13px/1 "Trebuchet MS", system-ui, sans-serif;
+    letter-spacing: .42em;
+    text-transform: uppercase;
+    color: #f6c48c;
+    margin-bottom: 20px;
+  }
+
+  .hero-content h1 {
+    font-size: clamp(2.8rem, 6vw, 5.2rem);
+    font-weight: 800;
+    line-height: 1.03;
+    letter-spacing: -.02em;
+    margin: 0 0 20px;
+    color: #fff;
+    text-shadow: 0 4px 28px rgba(0,0,0,0.55);
+  }
+
+  .hero-content p {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.18rem;
+    line-height: 1.65;
+    color: #ecdcc8;
+    margin: 0 auto 34px;
+    max-width: 620px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+  }
+
+  .hero-btn {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font: 700 1rem "Trebuchet MS", system-ui, sans-serif;
+    padding: 15px 34px;
+    border-radius: 999px;
+    box-shadow: 0 10px 30px rgba(238, 90, 64, 0.35);
+    transition: background .18s, transform .12s, box-shadow .18s;
+  }
+
+  .hero-btn:hover {
+    background: #d94a33;
+    box-shadow: 0 12px 38px rgba(238, 90, 64, 0.5);
+  }
+
+  .hero-btn:active {
+    transform: scale(.98);
+  }
+}
+
+/* ════════════════════════════════════════════════════
+   MENU — STYLE
+   ════════════════════════════════════════════════════ */
+#menu{background:var(--bg);color:var(--ink);padding-bottom:100px}
+
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+
+/* Brand bar */
+.brand-bar{
+  background:var(--bg);
+  border-bottom:1px solid var(--line);
+  padding:18px 0 14px;
+}
+.brand-bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand-mark{
+  display:flex;align-items:center;gap:10px;
+  font:800 1.05rem "Trebuchet MS",system-ui,sans-serif;
+  letter-spacing:.02em;color:var(--ink);
+}
+.brand-mark span{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:10px;
+  background:var(--accent);color:#fff;font-size:1rem;
+}
+.brand-tag{font-size:.78rem;color:var(--muted);font-weight:500;letter-spacing:.04em}
+
+/* ─── Filter bar ─── */
+.filter-bar{
+  position:sticky;
+  top:env(safe-area-inset-top,0px);
+  z-index:15;
+  background:rgba(9, 9, 11, 0.75);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line);
+}
+.filter-bar .wrap{
+  padding-top:10px;
+  padding-bottom:10px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+/* Logo brenda brand-mark — imazh në vend të emojit */
+.brand-mark span{
+  background: transparent;   /* hiq sfondin accent */
+  padding: 0;
+  overflow: hidden;
+}
+.brand-mark span img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 10px;       /* opsionale: nëse logoja ka cepat katror */
+}
+
+/* Search */
+.search{
+  position:relative;
+  width:100%;
+}
+.search input{
+  width:100%;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:10px 12px 10px 36px;
+  font:inherit;
+  font-size:16px; /* PREVENT IOS ZOOM */
+  color:var(--ink);
+  outline:none;
+  transition:border-color .18s,box-shadow .18s, background .18s;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.search input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(238, 90, 64, 0.2);
+  background:rgba(255,255,255,0.08);
+}
+.search input::placeholder{color:var(--muted)}
+.search::before{
+  content:"🔍";
+  position:absolute;
+  left:12px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:.85rem;
+  opacity:.5;
+  pointer-events:none;
+}
+
+/* Category tabs */
+.cat-tabs{
+  display:flex;
+  gap:6px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+  margin:0 -18px;
+  padding:0 18px;
+}
+.cat-tabs::-webkit-scrollbar{display:none}
+.cat-tab{
+  flex:0 0 auto;
+  cursor:pointer;
+  white-space:nowrap;
+  background:var(--paper);
+  border:1px solid var(--line);
+  color:var(--ink);
+  font:700 .82rem "Trebuchet MS",system-ui,sans-serif;
+  padding:8px 14px;
+  border-radius:999px;
+  transition:all .18s;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.cat-tab:hover{border-color:var(--accent); background:rgba(255,255,255,0.1);}
+.cat-tab.active{background:var(--accent);color:#fff;border-color:var(--accent); box-shadow:0 4px 12px rgba(238,90,64,0.3);}
+
+/* Desktop: search + tabs në një rresht */
+@media (min-width:700px){
+  .filter-bar .wrap{
+    flex-direction:row;
+    align-items:center;
+    gap:14px;
+  }
+  .search{flex:0 0 260px}
+  .cat-tabs{flex:1;min-width:0;margin:0;padding:0}
+}
+
+/* Seksionet e kategorive */
+.cat-section{margin:32px 0;scroll-margin-top:120px}
+@media (min-width:700px){.cat-section{scroll-margin-top:80px}}
+.cat-section.hidden{display:none}
+.cat-title{
+  font-size:1.4rem;font-weight:800;letter-spacing:-.01em;
+  margin:0 0 16px;padding-bottom:10px;
+  border-bottom:2px solid var(--line);
+  display:flex;align-items:baseline;gap:10px;color:var(--ink);
+}
+.cat-title small{
+  font-size:.75rem;font-weight:500;color:var(--muted);
+  letter-spacing:.06em;text-transform:uppercase;
+}
+
+/* Grid kartelash */
+.product-grid{display:grid;gap:16px;grid-template-columns:1fr}
+@media (min-width:540px){.product-grid{grid-template-columns:1fr 1fr}}
+@media (min-width:860px){.product-grid{grid-template-columns:repeat(3,1fr)}}
+
+/* ─── KARTELA PRODUKTIT (GLASS STYLE) ─── */
+.p-card{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform .18s,box-shadow .18s,border-color .18s, background .18s;
+  display:flex;flex-direction:column;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+}
+.p-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 32px rgba(238, 90, 64, 0.15);
+  border-color:var(--accent);
+  background:rgba(255, 255, 255, 0.08);
+}
+.p-card.hidden{display:none}
+
+.p-img{
+  position:relative;
+  aspect-ratio:4/3;
+  overflow:hidden;
+  background:rgba(255,255,255,0.02);
+}
+.p-img img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform .4s;
+}
+.p-card:hover .p-img img{transform:scale(1.05)}
+
+.p-badge{
+  position:absolute;top:10px;left:10px;
+  font:700 .65rem "Trebuchet MS",system-ui,sans-serif;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:4px 10px;border-radius:999px;color:#fff;
+  backdrop-filter: blur(4px);
+}
+.p-badge.new{background:var(--badge-new)}
+.p-badge.pop{background:var(--badge-pop)}
+.p-badge.spec{background:var(--badge-spec)}
+
+.p-body{padding:14px 16px 16px;display:flex;flex-direction:column;flex:1;gap:6px}
+.p-body h4{margin:0;font-size:1.02rem;font-weight:700;color:var(--ink)}
+.p-body p{margin:0;font-size:.84rem;color:var(--muted);line-height:1.4;flex:1}
+
+.p-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;margin-top:4px;
+}
+.p-price{font-size:1.05rem;font-weight:700;color:var(--accent);white-space:nowrap}
+
+.p-add{
+  width:34px;height:34px;border-radius:50%;
+  border:1.5px solid var(--line);background:rgba(255,255,255,0.05);color:var(--ink);
+  font-size:1.1rem;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .18s;flex-shrink:0;
+}
+.p-add:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.p-add:active{transform:scale(.9)}
+
+.p-allergens{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}
+.p-allergens span{
+  font-size:.62rem;font-weight:600;padding:2px 6px;border-radius:4px;
+  background:var(--line-soft);color:var(--muted);
+  text-transform:uppercase;letter-spacing:.03em;
+}
+
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-state .em{font-size:2.6rem;margin-bottom:10px;opacity:.4}
+
+/* ════════════════════════════════════════════════════
+   MODAL — DETAJ PRODUKTI
+   ════════════════════════════════════════════════════ */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:50;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+  backdrop-filter:blur(4px);
+}
+.modal-overlay.open{opacity:1;pointer-events:auto}
+
+.modal{
+  position:fixed;left:50%;top:50%;
+  transform:translate(-50%,-50%) scale(.96);
+  width:calc(100% - 32px);max-width:520px;
+  max-height:90vh;overflow-y:auto;
+  background:rgba(20, 20, 25, 0.95);color:var(--ink);
+  border-radius:20px;z-index:51;
+  border: 1px solid var(--line);
+  opacity:0;pointer-events:none;
+  transition:opacity .25s,transform .25s;
+  box-shadow:0 24px 80px rgba(0,0,0,.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.modal.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+
+.modal-img{
+  aspect-ratio:16/9;overflow:hidden;border-radius:20px 20px 0 0;
+  background:rgba(255,255,255,0.02);
+}
+.modal-img img{width:100%;height:100%;object-fit:cover;display:block}
+
+.modal-body{padding:20px 22px 24px;position:relative}
+.modal-close{
+  position:absolute;top:12px;right:12px;
+  background:rgba(0,0,0,.6);color:#fff;border:0;
+  width:34px;height:34px;border-radius:50%;cursor:pointer;
+  font-size:1.1rem;display:flex;align-items:center;justify-content:center;
+  z-index:1;
+  backdrop-filter: blur(4px);
+}
+.modal-badge{
+  display:inline-block;font:700 .65rem "Trebuchet MS",system-ui,sans-serif;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:4px 10px;border-radius:999px;color:#fff;margin-bottom:8px;
+}
+.modal-badge.new{background:var(--badge-new)}
+.modal-badge.pop{background:var(--badge-pop)}
+.modal-badge.spec{background:var(--badge-spec)}
+
+.modal-body h3{margin:0 0 6px;font-size:1.4rem;font-weight:800}
+.modal-body .m-desc{color:var(--muted);font-size:.95rem;margin:0 0 12px;line-height:1.5}
+.modal-body .m-price{font-size:1.5rem;font-weight:800;color:var(--accent);margin:0 0 16px}
+.modal-allergens{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px}
+.modal-allergens span{
+  font-size:.7rem;font-weight:600;padding:3px 8px;border-radius:6px;
+  background:var(--line-soft);color:var(--muted);
+  text-transform:uppercase;letter-spacing:.03em;
+}
+
+.modal-add{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;background:var(--accent);color:#fff;border:0;
+  font:700 1rem "Trebuchet MS",system-ui,sans-serif;
+  padding:15px;border-radius:14px;cursor:pointer;
+  transition:background .18s,transform .1s;
+}
+.modal-add:hover{background:#d94a33}
+.modal-add:active{transform:scale(.98)}
+
+/* ════════════════════════════════════════════════════
+   SHporta + Sheet
+   ════════════════════════════════════════════════════ */
+.cart-bar{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;
+  padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px));
+  pointer-events:none;
+}
+.cart-bar-inner{
+  max-width:1080px;margin:0 auto;
+  background:var(--accent);color:#fff;
+  border-radius:16px;padding:14px 18px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  box-shadow:0 8px 30px rgba(200,50,31,.4);
+  transform:translateY(120px);opacity:0;
+  transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .25s;
+  pointer-events:auto;cursor:pointer;
+}
+.cart-bar-inner.show{transform:translateY(0);opacity:1}
+.cart-bar-inner:active{transform:scale(.98)}
+.cart-bar-inner .left{display:flex;align-items:center;gap:10px;font-weight:700}
+.cart-bar-inner .count{
+  background:rgba(255,255,255,.25);border-radius:20px;
+  padding:2px 10px;font-size:.9rem;
+}
+.cart-bar-inner .right{font-weight:700;font-size:1.05rem}
+
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+  backdrop-filter:blur(3px);
+}
+.overlay.open{opacity:1;pointer-events:auto}
+
+.sheet{
+  position:fixed;left:0;right:0;bottom:0;z-index:41;
+  background:rgba(15, 15, 18, 0.98);color:var(--ink);
+  border-radius:22px 22px 0 0;
+  border-top: 1px solid var(--line);
+  padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));
+  max-width:1080px;margin:0 auto;
+  transform:translateY(100%);
+  transition:transform .32s cubic-bezier(.4,0,.2,1);
+  max-height:88vh;display:flex;flex-direction:column;
+  box-shadow:0 -12px 40px rgba(0,0,0,.5);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+.sheet.open{transform:translateY(0)}
+
+.sheet-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-bottom:14px;border-bottom:1px solid var(--line);
+}
+.sheet-head h3{margin:0;font-size:1.15rem;font-weight:800}
+.sheet-close{
+  background:var(--line-soft);border:0;border-radius:50%;
+  width:34px;height:34px;cursor:pointer;color:var(--ink);font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
+}
+
+.sheet-body{flex:1;overflow-y:auto;padding:6px 0;min-height:60px}
+
+.cart-item{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 0;border-bottom:1px solid var(--line-soft);
+}
+.cart-item:last-child{border-bottom:0}
+.cart-item .qty-ctl{
+  display:flex;align-items:center;
+  border:1px solid var(--line);border-radius:10px;
+  overflow:hidden;flex-shrink:0;
+  background:rgba(255,255,255,0.05);
+}
+.cart-item .qty-ctl button{
+  width:30px;height:32px;background:transparent;border:0;
+  color:var(--ink);font-size:1rem;cursor:pointer;line-height:1;
+}
+.cart-item .qty-ctl button:active{background:var(--line-soft)}
+.cart-item .qty-ctl span{
+  min-width:26px;text-align:center;font-weight:700;font-size:.9rem;color:var(--accent);
+}
+.cart-item .ci-name{flex:1;font-weight:600;font-size:.95rem}
+.cart-item .ci-name small{
+  display:block;font-weight:400;color:var(--muted);font-size:.8rem;margin-top:2px;
+}
+.cart-item .ci-price{font-weight:700;font-size:.95rem;white-space:nowrap;color:var(--ink)}
+
+.sheet-foot{padding-top:14px;border-top:1px solid var(--line)}
+
+/* ─── Formulari i porosisë ─── */
+.order-form{
+  display:none;
+  flex-direction:column;
+  gap:8px;
+  margin-bottom:14px;
+}
+.order-form.visible{display:flex}
+.form-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+@media (max-width:420px){.form-row{grid-template-columns:1fr}}
+.order-form input,
+.order-form textarea{
+  width:100%;
+  background:rgba(0,0,0,0.2);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:11px 12px;
+  font:inherit;
+  font-size:16px; /* PREVENT IOS ZOOM */
+  color:var(--ink);
+  outline:none;
+  transition:border-color .18s,box-shadow .18s, background .18s;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+.order-form input:focus,
+.order-form textarea:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(238, 90, 64, 0.2);
+  background:rgba(0,0,0,0.4);
+}
+.order-form input::placeholder,
+.order-form textarea::placeholder{color:var(--muted)}
+.order-form textarea{
+  resize:vertical;
+  min-height:56px;
+  max-height:110px;
+}
+.order-form input.invalid,
+.order-form textarea.invalid{
+  border-color:var(--invalid);
+  box-shadow:0 0 0 3px rgba(231, 76, 60, 0.2);
+}
+
+.sheet-total{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-weight:700;font-size:1rem;margin-bottom:12px;
+}
+.sheet-total .v{font-size:1.35rem;color:var(--accent)}
+
+.btn-wa{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  background:#25d366;color:#fff;text-decoration:none;
+  font-weight:700;font-size:1rem;
+  padding:15px;border-radius:14px;
+  transition:background .18s,transform .1s,opacity .18s;
+}
+.btn-wa:hover{background:#20bd5a}
+.btn-wa:active{transform:scale(.98)}
+.btn-wa.disabled{
+  opacity:.45;
+  pointer-events:auto; 
+  cursor:not-allowed;
+}
+
+.wa-hint{
+  display:none;
+  margin:8px 0 0;
+  font-size:.8rem;
+  color:var(--invalid);
+  text-align:center;
+  font-weight:500;
+}
+.wa-hint.visible{display:block}
+
+.btn-clear{
+  display:block;width:100%;background:transparent;border:0;
+  color:var(--muted);font-size:.85rem;text-decoration:underline;
+  padding:12px 0 0;cursor:pointer;
+}
+
+.empty-cart{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty-cart .em{font-size:2.6rem;margin-bottom:10px;opacity:.4}
+
+.footer{
+  text-align:center;color:var(--muted);font-size:.82rem;
+  padding:32px 18px 20px;border-top:1px solid var(--line);margin-top:40px;
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════
+     ANIMACIONI SCROLLUES
+     ════════════════════════════════════════════════════ -->
+<section id="track" aria-label="Si bëhet pica jonë">
+<div id="stage">
+  <canvas id="cv" role="img" aria-label="Picaxhiu përgatit një pizzë: brumi, hedhja, zbukurimi dhe furra"></canvas>
+  <div class="shade"></div>
+  <div class="brand">Pizzeria Nonna</div>
+  <div id="hint">Rrëshqit poshtë ↓</div>
+  <div class="cap">
+    <small id="cs"></small>
+    <h1 id="ct"></h1>
+    <p id="cp"></p>
+    <a class="go" id="go" href="#menu">Shiko menunë</a>
+  </div>
+  <div id="bar"></div>
+  <div id="load">DUKE NGARKUAR…</div>
+</div>
+</section>
+
+<!-- ════════════════════════════════════════════════════
+     DESKTOP HERO BANNER (hidden on mobile)
+     ════════════════════════════════════════════════════ -->
+<section id="hero-desktop" aria-label="Pizzeria Nonna">
+  <div class="hero-content">
+    <div class="hero-brand">Pizzeria Nonna</div>
+    <h1></h1>
+    <p>Brumë i fermentuar natyrshëm, përbërës të freskët, furrë me dru — një përvojë autentike italiane në zemër të Tiranës.</p>
+    <a href="#menu" class="hero-btn">Shiko menunë ↓</a>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════
+     MENU
+     ════════════════════════════════════════════════════ -->
+<div id="menu">
+
+  <div class="brand-bar">
+  <div class="wrap">
+    <div class="brand-mark">
+      <span>
+        <img src="logo.png" alt="Pizzeria Nonna" width="22" height="22">
+      </span>
+      Pizzeria Nonna
+    </div>
+    <div class="brand-tag">Tiranë · 11:00–23:00</div>
+  </div>
+</div>
+
+  <!-- SEARCH + KATEGORI bashkë, sticky -->
+  <div class="filter-bar">
+    <div class="wrap">
+      <div class="search">
+        <input id="searchInput" type="search" placeholder="Kërko në menu…" autocomplete="off" aria-label="Kërko në menu">
+      </div>
+      <nav class="cat-tabs" id="catTabs" aria-label="Kategoritë">
+        <div id="tabsWrap" style="display:contents"></div>
+      </nav>
+    </div>
+  </div>
+
+  <div class="wrap" id="menuRoot"></div>
+
+  <div class="footer">Pizzeria Nonna · Tiranë · Hapur çdo ditë 11:00–23:00</div>
+</div>
+
+<!-- Shporta fikse -->
+<div class="cart-bar" id="cartBar">
+  <div class="cart-bar-inner" id="cartBarInner">
+    <div class="left">🛒 Shporta <span class="count" id="cartCount">0</span></div>
+    <div class="right" id="cartTotal">0 L</div>
+  </div>
+</div>
+
+<!-- Modal detaj produkti -->
+<div class="modal-overlay" id="modalOverlay"></div>
+<div class="modal" id="modal">
+  <div class="modal-img" id="modalImg"></div>
+  <div class="modal-body">
+    <button class="modal-close" id="modalClose" aria-label="Mbyll">✕</button>
+    <div class="modal-badge" id="modalBadge"></div>
+    <h3 id="modalTitle"></h3>
+    <p class="m-desc" id="modalDesc"></p>
+    <div class="m-price" id="modalPrice"></div>
+    <div class="modal-allergens" id="modalAllergens"></div>
+    <button class="modal-add" id="modalAdd">🛒 Shto në shportë</button>
+  </div>
+</div>
+
+<!-- Overlay + Sheet shporte -->
+<div class="overlay" id="overlay"></div>
+<div class="sheet" id="sheet" aria-hidden="true">
+  <div class="sheet-head">
+    <h3>Porosia jote</h3>
+    <button class="sheet-close" id="closeSheet" aria-label="Mbyll">✕</button>
+  </div>
+  <div class="sheet-body" id="sheetBody"></div>
+  <div class="sheet-foot">
+    <!-- Formulari i të dhënave të klientit -->
+    <div class="order-form" id="orderForm">
+      <div class="form-row">
+        <input id="custName" type="text" placeholder="Emri *" autocomplete="name" required>
+        <input id="custPhone" type="tel" placeholder="Telefoni *" autocomplete="tel" required>
+      </div>
+      <input id="custAddress" type="text" placeholder="Adresa e dërgesës *" autocomplete="street-address" required>
+      <textarea id="custNotes" placeholder="Shënime (opsionale) — p.sh. kodi i ndërtesës, ora e dërgesës"></textarea>
+    </div>
+    <div class="sheet-total"><span>Totali</span><span class="v" id="sheetTotal">0 L</span></div>
+    <a class="btn-wa disabled" id="waBtn" href="#" target="_blank" rel="noopener">📱 Dërgo porosinë në WhatsApp</a>
+    <p class="wa-hint" id="waHint">Plotësoni të gjitha fushat e detyrueshme (*)</p>
+    <button class="btn-clear" id="clearCart">Pastro porosinë</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     SCRIPT 1 — ANIMACIONI
+     ════════════════════════════════════════════════════ -->
+<script>
+(function(){
+  'use strict';
+  var FRAME_DIR='ezgif-frame/',FRAME_PREFIX='frame-',FRAME_EXT='.png',
+      FRAME_START=1,FRAME_COUNT=75,FRAME_PAD=3,LERP=0.22;
+  var CAPTIONS=[
+    {s:'BRUMI',t:'',p:'Miell, ujë, kripë dhe kohë. Kaq mjafton për të nisur.'},
+    {s:'HEDHJA',t:'',p:'Duart e picaxhiut e hapin brumin pa e shtypur.'},
+    {s:'ZBUKURIMI',t:'',p:'Salcë domate, mocarela, borzilok i sapokëputur.'},
+    {s:'FURRA',t:'',p:'450°C, 90 sekonda'},
+    {s:'GATI',t:'Nga Nonna, për ty',p:'Serviret e ngrohtë, direkt nga furra.'}
+  ];
+  var track=document.getElementById('track'),stage=document.getElementById('stage'),
+      cv=document.getElementById('cv'),ctx=cv.getContext('2d'),
+      hint=document.getElementById('hint'),bar=document.getElementById('bar'),
+      load=document.getElementById('load'),cs=document.getElementById('cs'),
+      ct=document.getElementById('ct'),cp=document.getElementById('cp'),go=document.getElementById('go');
+  var dpr=Math.min(window.devicePixelRatio||1,2),frames=[],targetP=0,currentP=0,running=false;
+  function pad(n,w){n=String(n);while(n.length<w)n='0'+n;return n}
+  function frameURL(i){return FRAME_DIR+FRAME_PREFIX+pad(FRAME_START+i,FRAME_PAD)+FRAME_EXT}
+  function sizeCanvas(){
+    var w=stage.clientWidth,h=stage.clientHeight;
+    cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);draw(currentP);
+  }
+  function loadFrame(url){
+    return new Promise(function(res,rej){
+      var img=new Image();img.decoding='async';
+      img.onload=function(){
+        if(img.decode)img.decode().then(function(){res(img)},function(){res(img)});
+        else res(img);
+      };
+      img.onerror=function(){rej(new Error('Nuk u ngarkua: '+url))};
+      img.src=url;
+    });
+  }
+  function drawCover(img,alpha,w,h){
+    var iw=img.naturalWidth||img.width,ih=img.naturalHeight||img.height,
+        s=Math.max(w/iw,h/ih),dw=iw*s,dh=ih*s;
+    ctx.globalAlpha=alpha;
+    ctx.drawImage(img,(w-dw)/2,(h-dh)/2,dw,dh);
+    ctx.globalAlpha=1;
+  }
+  function draw(p){
+    var n=frames.length;if(!n)return;
+    var w=stage.clientWidth,h=stage.clientHeight;
+    ctx.clearRect(0,0,w,h);
+    var f=p*(n-1),i0=Math.floor(f),i1=Math.min(n-1,i0+1),t=f-i0;
+    var img0=frames[i0],img1=frames[i1];
+    if(img0)drawCover(img0,1,w,h);
+    if(img1&&i1!==i0&&t>0.02)drawCover(img1,t,w,h);
+  }
+  function updateCaption(p){
+    var seg=Math.min(CAPTIONS.length-1,Math.floor(p*CAPTIONS.length)),c=CAPTIONS[seg];
+    if(cs.textContent!==c.s){cs.textContent=c.s;ct.textContent=c.t;cp.textContent=c.p}
+    if(p>0.92){go.style.display='inline-block';hint.style.opacity='0'}
+    else{go.style.display='none';hint.style.opacity='1'}
+  }
+  function loop(){
+    var diff=targetP-currentP;
+    if(Math.abs(diff)<0.0008)currentP=targetP;
+    else currentP+=diff*LERP;
+    draw(currentP);updateCaption(currentP);
+    if(currentP!==targetP)requestAnimationFrame(loop);
+    else running=false;
+  }
+  function onScroll(){
+    var r=track.getBoundingClientRect(),total=track.offsetHeight-stage.offsetHeight;
+    targetP=total>0?Math.min(1,Math.max(0,-r.top/total)):0;
+    bar.style.width=(targetP*100)+'%';
+    if(!running){running=true;requestAnimationFrame(loop)}
+  }
+  window.addEventListener('resize',function(){sizeCanvas();onScroll()});
+  window.addEventListener('scroll',onScroll,{passive:true});
+  var urls=[];for(var i=0;i<FRAME_COUNT;i++)urls.push(frameURL(i));
+  Promise.all(urls.map(loadFrame)).then(function(imgs){
+    frames=imgs;load.style.opacity='0';
+    setTimeout(function(){load.style.display='none'},420);
+    sizeCanvas();onScroll();
+  }).catch(function(err){
+    console.error(err);load.textContent='GABIM: '+err.message;
+  });
+  sizeCanvas();
+})();
+</script>
+
+<!-- ════════════════════════════════════════════════════
+     SCRIPT 2 — MENU + SHporta + FORMULARI
+     ════════════════════════════════════════════════════ -->
+<script>
+(function(){
+  'use strict';
+
+  // ─── KONFIGURIMI ─────────────────────────────────
+  var PHONE = '355684586319'; // ← numri real WhatsApp
+
+  var CATS = [
+    { id:'pica', name:'Pica', ico:'🍕' },
+    { id:'pica-spec', name:'Pica Speciale', ico:'⭐' },
+    { id:'pica-klasike', name:'Pica Klasike', ico:'📖' },
+    { id:'pasta', name:'Pasta', ico:'🍝' },
+    { id:'starters', name:'Starters', ico:'🥗' },
+    { id:'salads', name:'Salads', ico:'🥬' },
+    { id:'burgers', name:'Burgers', ico:'🍔' },
+    { id:'sandwiches', name:'Sandwiches', ico:'🥪' },
+    { id:'desserts', name:'Desserts', ico:'🍰' },
+    { id:'drinks', name:'Drinks', ico:'🥤' },
+    { id:'extras', name:'Extras', ico:'➕' }
+  ];
+
+  var ITEMS = [
+    { id:'margherita', cat:'pica', name:'Margherita', desc:'Salcë domate, mocarela, borzilok', price:600, tags:[], allergens:['gluten','dairy'], img:'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&q=80', badge:'' },
+    { id:'pepperoni', cat:'pica', name:'Pepperoni', desc:'Mocarela, pepperoni pikante', price:800, tags:['spicy'], allergens:['gluten','dairy'], img:'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=600&q=80', badge:'popular' },
+    { id:'quattro', cat:'pica', name:'Quattro Formaggi', desc:'Mocarela, gorgonzola, parmixhano, fontina', price:950, tags:['veg'], allergens:['gluten','dairy'], img:'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80', badge:'' },
+    { id:'funghi', cat:'pica', name:'Funghi', desc:'Kërpudha, mocarela, majdanoz', price:750, tags:['veg'], allergens:['gluten','dairy'], img:'https://images.unsplash.com/photo-1506354666786-959d6d497f1a?w=600&q=80', badge:'' },
+    { id:'diavola', cat:'pica', name:'Diavola', desc:'Sallam pikant, speca djegës, ullinj', price:850, tags:['spicy'], allergens:['gluten','dairy'], img:'https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?w=600&q=80', badge:'special' },
+    { id:'capricciosa', cat:'pica', name:'Capricciosa', desc:'Proshutë, kërpudha, angjinare, ullinj', price:900, tags:[], allergens:['gluten','dairy'], img:'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80', badge:'' },
+    { id:'napoli', cat:'pica', name:'Napoli', desc:'Inxhinj, ullinj kalamata, kapar', price:800, tags:[], allergens:['gluten'], img:'https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?w=600&q=80', badge:'' },
+    { id:'rustica', cat:'pica', name:'Rustica', desc:'Patate, rozmarinë, provola', price:800, tags:['veg'], allergens:['gluten','dairy'], img:'https://images.unsplash.com/photo-1585238342024-78d387f4a707?w=600&q=80', badge:'new' },
+    { id:'tartufo', cat:'pica-spec', name:'Tartufo', desc:'Krem tartufi, mocarela, kërpudha porcini', price:1200, tags:['veg'], allergens:['gluten','dairy'], img:'https://images.unsplash.com/photo-1541745537411-b8046dc6d66c?w=600&q=80', badge:'special' },
+    { id:'bufala', cat:'pica-spec', name:'Bufala', desc:'Mocarela bufala, domate qershi, borzilok', price:1100, tags:['veg'], allergens:['gluten','dairy'], img:'https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?w=600&q=80', badge:'' },
+    { id:'prosciutto', cat:'pica-spec', name:'Prosciutto e Rucola', desc:'Proshutë crudo, rucola, parmixhano', price:1150, tags:[], allergens:['gluten','dairy'], img:'https://images.unsplash.com/photo-1620374645498-af6bd681a0bd?w=600&q=80', badge:'' },
+    { id:'marinara', cat:'pica-klasike', name:'Marinara', desc:'Salcë domate, hudhër, origano, vaj ulliri', price:500, tags:['veg'], allergens:['gluten'], img:'https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=600&q=80', badge:'' },
+    { id:'margherita-k', cat:'pica-klasike', name:'Margherita Klasike', desc:'Salcë domate, mocarela, borzilok', price:550, tags:['veg'], allergens:['gluten','dairy'], img:'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&q=80', badge:'' },
+    { id:'carbonara', cat:'pasta', name:'Carbonara', desc:'Spaghetti, guanciale, vezë, pecorino', price:800, tags:[], allergens:['gluten','dairy','eggs'], img:'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=600&q=80', badge:'popular' },
+    { id:'bolognese', cat:'pasta', name:'Bolognese', desc:'Tagliatelle, ragù, parmixhano', price:850, tags:[], allergens:['gluten','dairy'], img:'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=600&q=80', badge:'' },
+    { id:'pesto', cat:'pasta', name:'Pesto', desc:'Penne, pesto genovese, pinjoli', price:750, tags:['veg'], allergens:['gluten','dairy','nuts'], img:'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=600&q=80', badge:'' },
+    { id:'bruschetta', cat:'starters', name:'Bruschetta', desc:'Buka, domate, borzilok, hudhër', price:350, tags:['veg'], allergens:['gluten'], img:'https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=600&q=80', badge:'' },
+    { id:'arancini', cat:'starters', name:'Arancini', desc:'Toptha orizi, mocarela, panco', price:450, tags:['veg'], allergens:['gluten','dairy'], img:'https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?w=600&q=80⁠￼', badge:'new' },
+    { id:'caprese', cat:'salads', name:'Caprese', desc:'Domate, mocarela bufala, borzilok', price:500, tags:['veg'], allergens:['dairy'], img:'https://images.unsplash.com/photo-1592417817098-8fd3d9eb14a5?w=600&q=80', badge:'' },
+    { id:'cesar', cat:'salads', name:'Cesar', desc:'Sallatë, krutona, parmixhano, dressing', price:550, tags:[], allergens:['gluten','dairy','eggs','fish'], img:'https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=600&q=80', badge:'' },
+    { id:'classic-burger', cat:'burgers', name:'Classic Burger', desc:'Mish viçi, sallatë, domate, cheddar', price:700, tags:[], allergens:['gluten','dairy'], img:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80', badge:'popular' },
+    { id:'chicken-burger', cat:'burgers', name:'Chicken Burger', desc:'Pulë, sallatë, majonezë', price:650, tags:[], allergens:['gluten','eggs'], img:'https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=600&q=80', badge:'' },
+    { id:'panini', cat:'sandwiches', name:'Panini', desc:'Proshutë, djathë, domate', price:450, tags:[], allergens:['gluten','dairy'], img:'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=600&q=80', badge:'' },
+    { id:'club-sandwich', cat:'sandwiches', name:'Club Sandwich', desc:'Pulë, proshutë, vezë, sallatë', price:550, tags:[], allergens:['gluten','dairy','eggs'], img:'https://images.unsplash.com/photo-1553909489-cd47e0907980?w=600&q=80', badge:'' },
+    { id:'tiramisu', cat:'desserts', name:'Tiramisu', desc:'Kafe, mascarpone, kakao', price:400, tags:['veg'], allergens:['dairy','eggs','gluten'], img:'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=600&q=80', badge:'' },
+    { id:'panna-cotta', cat:'desserts', name:'Panna Cotta', desc:'Krem, vanilje, salcë frutash', price:400, tags:['veg'], allergens:['dairy'], img:'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&q=80', badge:'' },
+    { id:'nutella-pizza', cat:'desserts', name:'Pizza Nutella', desc:'Nutella, lajthi të copëtuara', price:500, tags:['veg'], allergens:['gluten','dairy','nuts'], img:'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&q=80', badge:'popular' },
+    { id:'birra', cat:'drinks', name:'Birrë e freskët', desc:'0.5 L · e ftohtë', price:300, tags:[], allergens:[], img:'https://images.unsplash.com/photo-1608270586620-248524c67de9?w=600&q=80', badge:'' },
+    { id:'coca', cat:'drinks', name:'Coca-Cola', desc:'Coca-Cola', price:200, tags:[], allergens:[], img:'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=600&q=80⁠￼', badge:'' },
+    { id:'uje', cat:'drinks', name:'Ujë mineral', desc:'0.5 L', price:100, tags:[], allergens:[], img:'https://images.unsplash.com/photo-1523362628745-0c100150b504?w=600&q=80', badge:'' },
+    { id:'vere', cat:'drinks', name:'Verë e shtëpisë', desc:'Gotë · e kuqe ose e bardhë', price:350, tags:[], allergens:['sulfites'], img:'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&q=80', badge:'' },
+    { id:'letchup', cat:'extras', name:'Ketchup', desc:'25ml', price:50, tags:[], allergens:['tomatto'], img:'https://images.unsplash.com/photo-1472476443507-c7a5948772fc?w=600&q=80', badge:'' },
+    { id:'mustard', cat:'extras', name:'Mustard', desc:'25ml', price:100, tags:['veg'], allergens:['gluten'], img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcrUYxgVyW6pv_TRYIqFuuawmyUsSQa-XWDAsiy35sBA&w=600⁠￼⁠', badge:'' },
+    { id:'mayo', cat:'extras', name:'Majonezë', desc:'25ml', price:100, tags:[], allergens:['eggs'], img:'https://as2.ftcdn.net/jpg/00/91/92/57/1000_F_91925726_2v65Bm3TrNGxJiA9XBnPuWZWxPGAhwRZ.jpg?w=600&q=80', badge:'' }
+  ];
+
+  var BADGE_LABEL = { new:'NEW', popular:'POPULAR', special:'SPECIAL' };
+  var BADGE_CLASS = { new:'new', popular:'pop', special:'spec' };
+
+  // ─── STATE ──────────────────────────────────────
+  var cart = {};
+  var isMenuVisible = false; 
+  
+  try { cart = JSON.parse(localStorage.getItem('nonna-cart-v4') || '{}') || {}; } catch(e){ cart = {}; }
+
+  function save(){ try { localStorage.setItem('nonna-cart-v4', JSON.stringify(cart)); } catch(e){} }
+  function find(id){ for (var i=0;i<ITEMS.length;i++) if (ITEMS[i].id===id) return ITEMS[i]; return null; }
+  function count(){ var n=0; for (var k in cart) n += cart[k]; return n; }
+  function total(){ var t=0; for (var k in cart){ var it=find(k); if(it) t += it.price*cart[k]; } return t; }
+
+  // ─── TABS ────────────────────────────────────────
+  var tabsWrap = document.getElementById('tabsWrap');
+  CATS.forEach(function(c){
+    var btn = document.createElement('button');
+    btn.className = 'cat-tab';
+    btn.dataset.cat = c.id;
+    btn.textContent = c.ico + ' ' + c.name;
+    btn.addEventListener('click', function(){
+      var s = document.getElementById('searchInput');
+      if (s.value) {
+        s.value = '';
+        s.dispatchEvent(new Event('input'));
+      }
+      var sec = document.getElementById('sec-' + c.id);
+      if (sec) sec.scrollIntoView({ behavior:'smooth', block:'start' });
+    });
+    tabsWrap.appendChild(btn);
+  });
+
+  // ─── RENDER MENU ────────────────────────────────
+  var root = document.getElementById('menuRoot');
+
+  function renderMenu(){
+    root.innerHTML = '';
+    CATS.forEach(function(cat){
+      var items = ITEMS.filter(function(i){ return i.cat === cat.id; });
+      if (!items.length) return;
+
+      var sec = document.createElement('section');
+      sec.className = 'cat-section';
+      sec.id = 'sec-' + cat.id;
+
+      var title = document.createElement('h2');
+      title.className = 'cat-title';
+      title.innerHTML = cat.ico + ' ' + cat.name + ' <small>' + items.length + '</small>';
+      sec.appendChild(title);
+
+      var grid = document.createElement('div');
+      grid.className = 'product-grid';
+      items.forEach(function(it){ grid.appendChild(makeCard(it)); });
+      sec.appendChild(grid);
+
+      root.appendChild(sec);
+    });
+  }
+
+  function makeCard(it){
+    var card = document.createElement('article');
+    card.className = 'p-card';
+    card.dataset.id = it.id;
+
+    var badgeHtml = '';
+    if (it.badge && BADGE_LABEL[it.badge]) {
+      badgeHtml = '<span class="p-badge ' + BADGE_CLASS[it.badge] + '">' + BADGE_LABEL[it.badge] + '</span>';
+    }
+
+    var allergensHtml = '';
+    if (it.allergens && it.allergens.length) {
+      allergensHtml = '<div class="p-allergens">' +
+        it.allergens.map(function(a){ return '<span>' + a + '</span>'; }).join('') +
+      '</div>';
+    }
+
+    card.innerHTML =
+      '<div class="p-img">' + badgeHtml +
+        '<img src="' + it.img + '" alt="' + it.name + '" loading="lazy">' +
+      '</div>' +
+      '<div class="p-body">' +
+        '<h4>' + it.name + '</h4>' +
+        '<p>' + it.desc + '</p>' +
+        allergensHtml +
+        '<div class="p-foot">' +
+          '<span class="p-price">' + it.price + ' L</span>' +
+          '<button class="p-add" data-add="' + it.id + '" aria-label="Shto ' + it.name + '">+</button>' +
+        '</div>' +
+      '</div>';
+
+    card.addEventListener('click', function(e){
+      if (e.target.closest('[data-add]')) return;
+      openModal(it);
+    });
+
+    return card;
+  }
+
+  // ─── MODAL ──────────────────────────────────────
+  var modalOverlay = document.getElementById('modalOverlay');
+  var modal = document.getElementById('modal');
+  var modalImg = document.getElementById('modalImg');
+  var modalBadge = document.getElementById('modalBadge');
+  var modalTitle = document.getElementById('modalTitle');
+  var modalDesc = document.getElementById('modalDesc');
+  var modalPrice = document.getElementById('modalPrice');
+  var modalAllergens = document.getElementById('modalAllergens');
+  var modalAdd = document.getElementById('modalAdd');
+  var currentItem = null;
+
+  function openModal(it){
+    currentItem = it;
+    modalImg.innerHTML = '<img src="' + it.img + '" alt="' + it.name + '">';
+    modalTitle.textContent = it.name;
+    modalDesc.textContent = it.desc;
+    modalPrice.textContent = it.price + ' L';
+
+    if (it.badge && BADGE_LABEL[it.badge]) {
+      modalBadge.className = 'modal-badge ' + BADGE_CLASS[it.badge];
+      modalBadge.textContent = BADGE_LABEL[it.badge];
+      modalBadge.style.display = 'inline-block';
+    } else {
+      modalBadge.style.display = 'none';
+    }
+
+    if (it.allergens && it.allergens.length) {
+      modalAllergens.innerHTML = it.allergens.map(function(a){ return '<span>' + a + '</span>'; }).join('');
+      modalAllergens.style.display = 'flex';
+    } else {
+      modalAllergens.style.display = 'none';
+    }
+
+    modalOverlay.classList.add('open');
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(){
+    modalOverlay.classList.remove('open');
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+    currentItem = null;
+  }
+
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  modalOverlay.addEventListener('click', closeModal);
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeModal(); });
+
+  modalAdd.addEventListener('click', function(){
+    if (currentItem) { addToCart(currentItem.id); closeModal(); }
+  });
+
+  // ─── SHporta ────────────────────────────────────
+  var cartBar = document.getElementById('cartBarInner');
+  var cartCount = document.getElementById('cartCount');
+  var cartTotal = document.getElementById('cartTotal');
+
+  var menuEl = document.getElementById('menu');
+  if ('IntersectionObserver' in window) {
+    var menuObs = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        isMenuVisible = en.isIntersecting;
+        updateBar(); 
+      });
+    }, { rootMargin: '0px' });
+    menuObs.observe(menuEl);
+  }
+
+  function updateBar(){
+    var n = count(), t = total();
+    cartCount.textContent = n;
+    cartTotal.textContent = t + ' L';
+    cartBar.classList.toggle('show', n > 0 && isMenuVisible);
+  }
+
+  function addToCart(id){
+    if (!find(id)) return;
+    cart[id] = (cart[id]||0) + 1;
+    save(); updateBar(); renderSheet();
+  }
+
+  function removeFromCart(id){
+    if (!cart[id]) return;
+    cart[id]--;
+    if (cart[id] <= 0) delete cart[id];
+    save(); updateBar(); renderSheet();
+  }
+
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('[data-add]');
+    if (btn) { addToCart(btn.dataset.add); return; }
+  });
+
+  // ─── FORMULARI I POROSISË ───────────────────────
+  var orderForm = document.getElementById('orderForm');
+  var custName = document.getElementById('custName');
+  var custPhone = document.getElementById('custPhone');
+  var custAddress = document.getElementById('custAddress');
+  var custNotes = document.getElementById('custNotes');
+  var waHint = document.getElementById('waHint');
+
+  var savedCust = {};
+  try { savedCust = JSON.parse(localStorage.getItem('nonna-customer') || '{}') || {}; } catch(e){}
+  if (savedCust.name) custName.value = savedCust.name;
+  if (savedCust.phone) custPhone.value = savedCust.phone;
+  if (savedCust.address) custAddress.value = savedCust.address;
+  if (savedCust.notes) custNotes.value = savedCust.notes;
+
+  function saveCustomer(){
+    try {
+      localStorage.setItem('nonna-customer', JSON.stringify({
+        name: custName.value.trim(),
+        phone: custPhone.value.trim(),
+        address: custAddress.value.trim(),
+        notes: custNotes.value.trim()
+      }));
+    } catch(e){}
+  }
+
+  [custName, custPhone, custAddress, custNotes].forEach(function(el){
+    el.addEventListener('input', function(){
+      el.classList.remove('invalid');
+      saveCustomer();
+      validateForm();
+    });
+  });
+
+  function validateForm(){
+    var hasItems = count() > 0;
+    var hasForm = custName.value.trim() &&
+                  custPhone.value.trim() &&
+                  custAddress.value.trim();
+    var valid = hasItems && hasForm;
+
+    if (valid) {
+      waBtn.classList.remove('disabled');
+      waBtn.href = waLink();
+      waHint.classList.remove('visible');
+    } else {
+      waBtn.classList.add('disabled');
+      waBtn.href = '#';
+      waHint.classList.toggle('visible', hasItems && !hasForm);
+    }
+    return valid;
+  }
+
+  function waLink(){
+    var entries = Object.keys(cart);
+    if (!entries.length) return '#';
+
+    var name = custName.value.trim();
+    var phone = custPhone.value.trim();
+    var address = custAddress.value.trim();
+    var notes = custNotes.value.trim();
+
+    var lines = ['🍕 *POROSI E RE* — Pizzeria Nonna', ''];
+    lines.push('👤 Emri: ' + name);
+    lines.push('📱 Telefoni: ' + phone);
+    lines.push('📍 Adresa: ' + address);
+    if (notes) lines.push('📝 Shënime: ' + notes);
+    lines.push('');
+    lines.push('🛒 *Porosia:*');
+    entries.forEach(function(id){
+      var it = find(id); if (!it) return;
+      lines.push('• ' + cart[id] + '× ' + it.name + ' — ' + (it.price * cart[id]) + ' L');
+    });
+    lines.push('');
+    lines.push('💰 *Totali:* ' + total() + ' L');
+
+    return 'https://wa.me/' + PHONE + '?text=' + encodeURIComponent(lines.join('\n'));
+  }
+
+  // ─── Sheet ──────────────────────────────────────
+  var overlay = document.getElementById('overlay');
+  var sheet = document.getElementById('sheet');
+  var sheetBody = document.getElementById('sheetBody');
+  var sheetTotal = document.getElementById('sheetTotal');
+  var waBtn = document.getElementById('waBtn');
+
+  function openSheet(){
+    overlay.classList.add('open');
+    sheet.classList.add('open');
+    sheet.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSheet(){
+    overlay.classList.remove('open');
+    sheet.classList.remove('open');
+    sheet.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+  }
+
+  cartBar.addEventListener('click', openSheet);
+  document.getElementById('closeSheet').addEventListener('click', closeSheet);
+  overlay.addEventListener('click', closeSheet);
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeSheet(); });
+
+  document.getElementById('clearCart').addEventListener('click', function(){
+    cart = {}; save(); updateBar(); renderSheet();
+  });
+
+  function renderSheet(){
+    var entries = Object.keys(cart).map(function(id){ return { item: find(id), qty: cart[id] }; })
+                       .filter(function(e){ return e.item; });
+
+    if (!entries.length) {
+      sheetBody.innerHTML = '<div class="empty-cart"><div class="em">🛒</div><p>Porosia është bosh.<br>Shto ndonjë gjë nga menuja.</p></div>';
+      sheetTotal.textContent = '0 L';
+      orderForm.classList.remove('visible');
+      waBtn.classList.add('disabled');
+      waBtn.href = '#';
+      waHint.classList.remove('visible');
+      return;
+    }
+
+    sheetBody.innerHTML = entries.map(function(e){
+      var it = e.item;
+      return '<div class="cart-item">' +
+        '<div class="qty-ctl">' +
+          '<button data-dec="' + it.id + '">−</button>' +
+          '<span>' + e.qty + '</span>' +
+          '<button data-inc="' + it.id + '">+</button>' +
+        '</div>' +
+        '<div class="ci-name">' + it.name + '<small>' + it.desc + '</small></div>' +
+        '<span class="ci-price">' + (it.price * e.qty) + ' L</span>' +
+      '</div>';
+    }).join('');
+
+    sheetTotal.textContent = total() + ' L';
+    orderForm.classList.add('visible');
+    validateForm();
+  }
+
+  sheetBody.addEventListener('click', function(e){
+    var b = e.target.closest('button');
+    if (!b) return;
+    if (b.dataset.inc) addToCart(b.dataset.inc);
+    else if (b.dataset.dec) removeFromCart(b.dataset.dec);
+  });
+
+  waBtn.addEventListener('click', function(e){
+    if (!validateForm()) {
+      e.preventDefault();
+      [custName, custPhone, custAddress].forEach(function(el){
+        if (!el.value.trim()) el.classList.add('invalid');
+      });
+      var firstEmpty = [custName, custPhone, custAddress].find(function(el){ return !el.value.trim(); });
+      if (firstEmpty) firstEmpty.focus();
+    }
+  });
+
+  // ─── Kërkimi ────────────────────────────────────
+  var searchEl = document.getElementById('searchInput');
+  searchEl.addEventListener('input', function(){
+    var q = this.value.trim().toLowerCase();
+    var anyVisible = false;
+
+    document.querySelectorAll('.p-card').forEach(function(card){
+      var match = !q || card.textContent.toLowerCase().indexOf(q) !== -1;
+      card.classList.toggle('hidden', !match);
+      if (match) anyVisible = true;
+    });
+
+    document.querySelectorAll('.cat-section').forEach(function(sec){
+      var visible = sec.querySelectorAll('.p-card:not(.hidden)').length;
+      sec.classList.toggle('hidden', visible === 0);
+    });
+
+    var existing = document.getElementById('emptySearch');
+    if (!anyVisible && q) {
+      if (!existing) {
+        var msg = document.createElement('div');
+        msg.id = 'emptySearch';
+        msg.className = 'empty-state';
+        msg.innerHTML = '<div class="em">🔍</div><p>Asnjë artikull nuk u gjet për "<strong>' + q + '</strong>".</p>';
+        root.appendChild(msg);
+      } else {
+        existing.innerHTML = '<div class="em">🔍</div><p>Asnjë artikull nuk u gjet për "<strong>' + q + '</strong>".</p>';
+      }
+    } else if (existing) {
+      existing.remove();
+    }
+  });
+
+  // ─── Scroll-spy i përditësuar për tabs ──────────
+  var tabEls = tabsWrap.querySelectorAll('.cat-tab');
+  var catTabsContainer = document.getElementById('catTabs');
+  var activeCatId = null;
+  var isScrolling = false;
+
+  function setActiveTab(catId){
+    if (activeCatId === catId) return;
+    activeCatId = catId;
+
+    tabEls.forEach(function(t){
+      var isActive = t.dataset.cat === catId;
+      t.classList.toggle('active', isActive);
+      
+      if (isActive && catTabsContainer) {
+        var scrollLeft = t.offsetLeft - (catTabsContainer.clientWidth / 2) + (t.clientWidth / 2);
+        catTabsContainer.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+      }
+    });
+  }
+
+  window.addEventListener('scroll', function() {
+    if (!isMenuVisible) return;
+
+    if (!isScrolling) {
+      window.requestAnimationFrame(function() {
+        var offset = window.innerWidth >= 700 ? 80 : 120;
+        var sections = document.querySelectorAll('.cat-section:not(.hidden)');
+        var currentCat = null;
+
+        for (var i = 0; i < sections.length; i++) {
+          var rect = sections[i].getBoundingClientRect();
+          if (rect.top <= offset + 15) {
+            currentCat = sections[i].id.replace('sec-', '');
+          } else {
+            break; 
+          }
+        }
+
+        if (!currentCat && sections.length > 0) {
+          var firstRect = sections[0].getBoundingClientRect();
+          if (firstRect.top < window.innerHeight) {
+            currentCat = sections[0].id.replace('sec-', '');
+          }
+        }
+
+        if (currentCat) {
+          setActiveTab(currentCat);
+        }
+        isScrolling = false;
+      });
+      isScrolling = true;
+    }
+  }, { passive: true });
+
+  // ─── Init ───────────────────────────────────────
+  renderMenu();
+  updateBar();
+  renderSheet();
+})();
+</script>
+</body>
+</html>
