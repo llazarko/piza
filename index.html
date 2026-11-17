@@ -89,10 +89,40 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;will-chang
 @keyframes bob{50%{transform:translateY(5px)}}
 #bar{position:absolute;left:0;bottom:0;height:4px;width:0;background:#ee5a40}
 #load{
-  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  background:#1b1410;font:600 15px "Trebuchet MS",system-ui,sans-serif;
-  letter-spacing:.14em;color:#f6c48c;transition:opacity .4s;
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  background:#1b1410;
+  transition:opacity .4s;
+  z-index:5;
 }
+.load-inner{text-align:center}
+
+.load-brand{
+  font:700 clamp(1.4rem,6vw,1.9rem) "Trebuchet MS",system-ui,sans-serif;
+  letter-spacing:.32em;
+  text-transform:uppercase;
+  color:#f6c48c;
+  margin-bottom:10px;
+  text-shadow:0 2px 14px rgba(246,196,140,.25);
+}
+
+.load-sub{
+  font:italic 1rem Georgia,"Times New Roman",serif;
+  color:#ecdcc8;
+  opacity:.75;
+  letter-spacing:.08em;
+  margin-bottom:26px;
+}
+
+.load-spinner{
+  width:38px;height:38px;margin:0 auto;
+  border:3px solid rgba(246,196,140,.18);
+  border-top-color:#f6c48c;
+  border-radius:50%;
+  animation:loadSpin .9s linear infinite;
+}
+
+@keyframes loadSpin{to{transform:rotate(360deg)}}
 
 /* ════════════════════════════════════════════════════
    DESKTOP HERO BANNER
@@ -706,7 +736,13 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;will-chang
     <a class="go" id="go" href="#menu">Shiko menunë</a>
   </div>
   <div id="bar"></div>
-  <div id="load">DUKE NGARKUAR…</div>
+  <div id="load">
+  <div class="load-inner">
+    <div class="load-brand">Pizzeria Nonna</div>
+    <div class="load-sub">nga brumi te pica</div>
+    <div class="load-spinner" aria-hidden="true"></div>
+  </div>
+</div>
 </div>
 </section>
 
@@ -935,7 +971,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;will-chang
     { id:'bolognese', cat:'pasta', name:'Bolognese', desc:'Tagliatelle, ragù, parmixhano', price:850, tags:[], allergens:['gluten','dairy'], img:'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=600&q=80', badge:'' },
     { id:'pesto', cat:'pasta', name:'Pesto', desc:'Penne, pesto genovese, pinjoli', price:750, tags:['veg'], allergens:['gluten','dairy','nuts'], img:'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=600&q=80', badge:'' },
     { id:'bruschetta', cat:'starters', name:'Bruschetta', desc:'Buka, domate, borzilok, hudhër', price:350, tags:['veg'], allergens:['gluten'], img:'https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=600&q=80', badge:'' },
-    { id:'arancini', cat:'starters', name:'Arancini', desc:'Toptha orizi, mocarela, panco', price:450, tags:['veg'], allergens:['gluten','dairy'], img:'https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?w=600&q=80⁠￼', badge:'new' },
+    { id:'arancini', cat:'starters', name:'Arancini', desc:'Toptha orizi, mocarela, panco', price:450, tags:['veg'], allergens:['gluten','dairy'], img:'https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?w=600&q=80⁠', badge:'new' },
     { id:'caprese', cat:'salads', name:'Caprese', desc:'Domate, mocarela bufala, borzilok', price:500, tags:['veg'], allergens:['dairy'], img:'https://images.unsplash.com/photo-1592417817098-8fd3d9eb14a5?w=600&q=80', badge:'' },
     { id:'cesar', cat:'salads', name:'Cesar', desc:'Sallatë, krutona, parmixhano, dressing', price:550, tags:[], allergens:['gluten','dairy','eggs','fish'], img:'https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=600&q=80', badge:'' },
     { id:'classic-burger', cat:'burgers', name:'Classic Burger', desc:'Mish viçi, sallatë, domate, cheddar', price:700, tags:[], allergens:['gluten','dairy'], img:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80', badge:'popular' },
@@ -946,11 +982,11 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;will-chang
     { id:'panna-cotta', cat:'desserts', name:'Panna Cotta', desc:'Krem, vanilje, salcë frutash', price:400, tags:['veg'], allergens:['dairy'], img:'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&q=80', badge:'' },
     { id:'nutella-pizza', cat:'desserts', name:'Pizza Nutella', desc:'Nutella, lajthi të copëtuara', price:500, tags:['veg'], allergens:['gluten','dairy','nuts'], img:'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&q=80', badge:'popular' },
     { id:'birra', cat:'drinks', name:'Birrë e freskët', desc:'0.5 L · e ftohtë', price:300, tags:[], allergens:[], img:'https://images.unsplash.com/photo-1608270586620-248524c67de9?w=600&q=80', badge:'' },
-    { id:'coca', cat:'drinks', name:'Coca-Cola', desc:'Coca-Cola', price:200, tags:[], allergens:[], img:'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=600&q=80⁠￼', badge:'' },
+    { id:'coca', cat:'drinks', name:'Coca-Cola', desc:'Coca-Cola', price:200, tags:[], allergens:[], img:'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=600&q=80⁠', badge:'' },
     { id:'uje', cat:'drinks', name:'Ujë mineral', desc:'0.5 L', price:100, tags:[], allergens:[], img:'https://images.unsplash.com/photo-1523362628745-0c100150b504?w=600&q=80', badge:'' },
     { id:'vere', cat:'drinks', name:'Verë e shtëpisë', desc:'Gotë · e kuqe ose e bardhë', price:350, tags:[], allergens:['sulfites'], img:'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&q=80', badge:'' },
     { id:'letchup', cat:'extras', name:'Ketchup', desc:'25ml', price:50, tags:[], allergens:['tomatto'], img:'https://images.unsplash.com/photo-1472476443507-c7a5948772fc?w=600&q=80', badge:'' },
-    { id:'mustard', cat:'extras', name:'Mustard', desc:'25ml', price:100, tags:['veg'], allergens:['gluten'], img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcrUYxgVyW6pv_TRYIqFuuawmyUsSQa-XWDAsiy35sBA&w=600⁠￼⁠', badge:'' },
+    { id:'mustard', cat:'extras', name:'Mustard', desc:'25ml', price:100, tags:['veg'], allergens:['gluten'], img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcrUYxgVyW6pv_TRYIqFuuawmyUsSQa-XWDAsiy35sBA&w=600⁠⁠', badge:'' },
     { id:'mayo', cat:'extras', name:'Majonezë', desc:'25ml', price:100, tags:[], allergens:['eggs'], img:'https://as2.ftcdn.net/jpg/00/91/92/57/1000_F_91925726_2v65Bm3TrNGxJiA9XBnPuWZWxPGAhwRZ.jpg?w=600&q=80', badge:'' }
   ];
 
